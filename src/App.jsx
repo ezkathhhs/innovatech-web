@@ -6,7 +6,7 @@ function App() {
   const [email, setEmail] = useState('');
 
   // La URL base cambiará cuando esté en AWS, por ahora apunta al localhost
-  const API_URL = import.meta.env.VITE_API_URL || 'backend-alb-2142126348.us-east-1.elb.amazonaws.com/api';
+  const API_URL = import.meta.env.VITE_API_URL || 'http://backend-alb-v2-974296197.us-east-1.elb.amazonaws.com/api';
 
   const cargarUsuarios = async () => {
     const res = await fetch(API_URL);
