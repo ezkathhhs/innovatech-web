@@ -46,8 +46,8 @@ jobs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        sed -i "s|TU_URI_DE_ECR_FRONTEND:latest|$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|g" k8s/frontend.yml
+        sed -i "s|604672140843.dkr.ecr.us-east-1.amazonaws.com/innovatech-frontend:latest|$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|g" k8s/frontend.yml
 
-    - name: Aplicar manifiestos en Kubernetes
-      run: |
-        kubectl apply -f k8s/frontend.yml
+    #- name: Aplicar manifiestos en Kubernetes
+      #run: |
+        #kubectl apply -f k8s/frontend.yml
