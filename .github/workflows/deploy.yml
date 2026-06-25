@@ -1,22 +1,20 @@
-name: Deploy Frontend a EKS
+name: Deploy Frontend to ECR
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
 
 env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: innovatech-frontend
-  CLUSTER_NAME: innovatech-cluster-v2
 
 jobs:
-  deploy:
+  build-and-push:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout del código
-      uses: actions/checkout@v3
+    - uses: actions/checkout@v3
 
-    - name: Configurar credenciales de AWS
+    - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -24,30 +22,14 @@ jobs:
         aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
         aws-region: ${{ env.AWS_REGION }}
 
-    - name: Login a Amazon ECR
+    - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Build y Push de la imagen a ECR
+    - name: Build, tag, and push image to Amazon ECR
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        echo "Listando archivos en la raíz:"
-        ls -la
-        docker build -f Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-    - name: Configurar conexión a EKS
-      run: aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
-
-    - name: Reemplazar URI con sed e inyectar versión
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        IMAGE_TAG: ${{ github.sha }}
-      run: |
-        sed -i "s|604672140843.dkr.ecr.us-east-1.amazonaws.com/innovatech-frontend:latest|$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|g" k8s/frontend.yml
-
-    #- name: Aplicar manifiestos en Kubernetes
-      #run: |
-        #kubectl apply -f k8s/frontend.yml
