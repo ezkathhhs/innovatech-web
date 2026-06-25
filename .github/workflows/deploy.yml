@@ -7,7 +7,7 @@ on:
 env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: innovatech-frontend
-  CLUSTER_NAME: innovatech-cluster
+  CLUSTER_NAME: innovatech-cluster-v2
 
 jobs:
   deploy:
