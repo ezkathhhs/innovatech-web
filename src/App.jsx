@@ -10,7 +10,7 @@ function App() {
   const [nombreUsuario, setNombreUsuario] = useState('');
   const [emailUsuario, setEmailUsuario] = useState('');
 
-  const API_URL_USUARIOS = import.meta.env.VITE_API_URL_USUARIOS || 'http://backend-alb-v2-974296197.us-east-1.elb.amazonaws.com:8080/api/usuarios';
+  const API_URL_USUARIOS = '/api/usuarios';
 
   const cargarUsuarios = async () => {
     try {
@@ -49,7 +49,7 @@ function App() {
   const [stock, setStock] = useState('');
 
   // Apunta a la misma URL del ALB, pero con la ruta /api/productos
-  const API_URL_PRODUCTOS = import.meta.env.VITE_API_URL_PRODUCTOS || 'http://backend-alb-v2-974296197.us-east-1.elb.amazonaws.com:8080/api/productos';
+  const API_URL_PRODUCTOS = '/api/productos';
 
   const cargarProductos = async () => {
     try {
